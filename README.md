@@ -2,14 +2,14 @@
 
 **Name:** Haruna Hamidu
 **Student ID:** C11-2026-CCSA-17060
-**Course:** Check Point Certified Security Administrator (CCSA)
-**Topic:** Policy Layers (Ordered Layers and Inline Layers) in SmartConsole and the Gaia Portal
+**Course:** Check Point Certified Security Administrator (CCSA) 105 policy layer.
+
 
 ---
 
 ## 1. Introduction
 
-This report covers my full assignment on Check Point policy layers. I did the practical work in **SmartConsole** and the **Gaia Portal**. I started by finding the default policy and its layer, then built my own policy package (`Orion Layers`) with two Ordered Layers and an Inline Layer. After that I installed it, tested it with real traffic and fixed what broke.
+This report covers my full assignment on Check Point policy layers. I did the practical work in **SmartConsole** and the **Gaia Portal**. I started by finding the default policy and its layer, then built my own policy package (Orion Layers) with two Ordered Layers and an Inline Layer. After that I installed it, tested it with real traffic and fixed what broke.
 
 The big idea I took from this lab: a connection can be **accepted** in one layer and still be **dropped** in the next. A layer only decides for itself. The packet has to be allowed by every layer.
 
@@ -26,9 +26,7 @@ In SmartConsole I opened *Manage policies and layers* and found what the default
 |---|---|
 | Default Access Control policy | **Standard** |
 | Default Ordered Layer | **Network** |
-
-![Task 1a](task1a_default_policy_and_layer.png)
-
+ the screenshot evidence of the default access policy i lost it during the process of making report in my github
 **1b. Properties of the default Network layer**
 
 - **General:** This page shows the basic details of the layer, such as the blades enabled, sharing status and where the layer is used. The Firewall blade is enabled, Sharing is disabled, and the layer is used in the Standard policy.
