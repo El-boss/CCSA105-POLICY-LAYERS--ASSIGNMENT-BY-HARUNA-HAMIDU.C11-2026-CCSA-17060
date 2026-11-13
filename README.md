@@ -13,8 +13,6 @@ This report covers my full assignment on Check Point policy layers. I did the pr
 
 The big idea I took from this lab: a connection can be **accepted** in one layer and still be **dropped** in the next. A layer only decides for itself. The packet has to be allowed by every layer.
 
-> **A note on evidence:** All screenshots are in the `screenshots/` folder. In three places I could not take screenshots because my organisation's system was down or my lab machine hung. I say exactly where in each task instead of pretending I have proof I don't have.
-
 ---
 
 ## Part A – Practical Lab
@@ -29,7 +27,7 @@ In SmartConsole I opened *Manage policies and layers* and found what the default
 | Default Access Control policy | **Standard** |
 | Default Ordered Layer | **Network** |
 
-![Task 1a](screenshots/task1a_default_policy_and_layer.png)
+![Task 1a](task1a_default_policy_and_layer.png)
 
 **1b. Properties of the default Network layer**
 
@@ -37,7 +35,7 @@ In SmartConsole I opened *Manage policies and layers* and found what the default
 - **Advanced:** This is where unmatched traffic is handled. The **Implicit Cleanup Action is Drop**, so anything that matches no rule is blocked. Proxy Configuration and Dynamic Layer are both disabled.
 - **Permissions:** This controls who can edit the layer. From the lab handout and what I saw, the Super User profile has Read/Write and Administrators have Read/Write All, so both can change the layer.
 
-![Task 1b](screenshots/task1b_default_layer_properties.png)
+![Task 1b](task1b_default_layer_properties.png)
 
 **1c. Cleanup Rule action**
 I opened the rulebase of the default policy and looked at the bottom. The Cleanup Rule action is **Drop**, with logging enabled so an admin can review what got dropped.
@@ -50,11 +48,11 @@ I opened the rulebase of the default policy and looked at the bottom. The Cleanu
 
 I created a new policy package called **Orion Layers** with Access Control turned on and the **Network** layer selected.
 
-![Task 2a - Orion Layers package](screenshots/task2a_orion_layers_package.png)
+![Task 2a - Orion Layers package](task2a_orion_layers_package.png)
 
 The Network layer rulebase has **five rules**. For each one I filled in the source, destination, service, action and logging. Rule 3 is the **Internal to DMZ** rule, which is an Accept rule (it becomes important later in Task 5).
 
-![Task 2b - Network rulebase](screenshots/task2b_network_rulebase.png)
+![Task 2b - Network rulebase](task2b_network_rulebase.png)
 
 The Cleanup Rule is set explicitly to **Drop**, which matches the layer's implicit cleanup action.
 
@@ -66,19 +64,19 @@ I added a second Ordered Layer called **Service-Control** to the Orion Layers pa
 
 - 3a. General settings
 
-![Task 3a](screenshots/task3a_service_control_general.png)
+![Task 3a](task3a_service_control_general.png)
 - 3b. Advanced settings
 
-![Task 3b](screenshots/task3b_service_control_advanced.png)
+![Task 3b](task3b_service_control_advanced.png)
 - 3c. Permissions settings
 
-![Task 3c](screenshots/task3c_service_control_permissions.png)
+![Task 3c](task3c_service_control_permissions.png)
 - 3d. The Orion Layers policy showing both layers
 
-![Task 3d](screenshots/task3d_orion_layers_policy.png)
+![Task 3d](task3d_orion_layers_policy.png)
 - 3e. The Service-Control rulebase
 
-![Task 3e](screenshots/task3e_service_control_rulebase.png)
+![Task 3e](task3e_service_control_rulebase.png)
 
 ---
 
@@ -86,28 +84,28 @@ I added a second Ordered Layer called **Service-Control** to the Orion Layers pa
 
 - **4a.** Installed the Orion Layers policy successfully.
 
-![Task 4a](screenshots/task4a_policy_install_success.png)
+![Task 4a](task4a_policy_install_success.png)
 - **4b. T1 – SSH before the fix:** The SSH connection was **dropped**.
 
-![Task 4b](screenshots/task4b_T1_ssh_dropped_before_fix.png)
+![Task 4b](task4b_T1_ssh_dropped_before_fix.png)
 - **4c. The fix:** I added an **Admin Services** rule to the Service-Control layer so admin traffic like SSH is allowed.
 
-![Task 4c](screenshots/task4c_admin_services_rule.png)
+![Task 4c](task4c_admin_services_rule.png)
 - **4d. T1 – SSH after the fix:** SSH is now **accepted**.
 
-![Task 4d](screenshots/task4d_T1_ssh_accepted_after_fix.png)
+![Task 4d](task4d_T1_ssh_accepted_after_fix.png)
 - **4e. HTTP:** Accepted.
 
-![Task 4e](screenshots/task4e_http_accepted.png)
+![Task 4e](task4e_http_accepted.png)
 - **4f. Ping / ICMP:** Dropped by the Cleanup Rule of the Service-Control layer.
 
-![Task 4f](screenshots/task4f_ping_dropped_cleanup_rule.png)
+![Task 4f](task4f_ping_dropped_cleanup_rule.png)
 - **4g. Ping:** Dropped by the Stealth Rule of the Network layer.
 
-![Task 4g](screenshots/task4g_ping_dropped_stealth_rule.png)
+![Task 4g](task4g_ping_dropped_stealth_rule.png)
 - **4h. Telnet:** Dropped by the Service-Control Cleanup Rule.
 
-![Task 4h](screenshots/task4h_telnet_dropped_service_control.png)
+![Task 4h](task4h_telnet_dropped_service_control.png)
 
 SSH is the one that taught me the most. It was dropped because Service-Control did not have an allow rule for it, so the traffic never made it through. I checked the logs to see which layer was responsible, then added the rule in the right place.
 
@@ -119,18 +117,18 @@ I created an Inline Layer called **DMZ-Policy**.
 
 - **5a. General:** Three blades enabled, Mobile Access disabled, Sharing enabled.
 
-![Task 5a](screenshots/task5a_dmz_policy_general.png)
+![Task 5a](task5a_dmz_policy_general.png)
 - **5b. Advanced:** Implicit Cleanup Action is **Drop**.
 
-![Task 5b](screenshots/task5b_dmz_policy_advanced.png)
+![Task 5b](task5b_dmz_policy_advanced.png)
 - **5c. Permissions:** Super User and Read-Write All.
 
-![Task 5c](screenshots/task5c_dmz_policy_permissions.png)
+![Task 5c](task5c_dmz_policy_permissions.png)
 - **5d. Rulebase:** Three rules: **Web Access**, **Mail Access** and a **Cleanup Rule**.
   *(No screenshot of the DMZ-Policy page, because my system got stuck while I was working on it.)*
 - **5e. Network layer, Rule 3:** I changed the Internal to DMZ rule so its action is **Inline Layer** and assigned it **DMZ-Policy**.
 
-![Task 5e](screenshots/task5e_network_rule3_inline_layer.png)
+![Task 5e](task5e_network_rule3_inline_layer.png)
 
 ---
 
@@ -140,19 +138,19 @@ I installed the policy again and ran these tests:
 
 **6a. T6 – HTTP access to Web_Server**
 
-![Task 6a](screenshots/task6a_T6_http_web_server.png)
+![Task 6a](task6a_T6_http_web_server.png)
 
 **6b. T7 – SMTP access to Mail_Server**
 
-![Task 6b](screenshots/task6b_T7_smtp_mail_server.png)
+![Task 6b](task6b_T7_smtp_mail_server.png)
 
 **6c. T8 – Telnet to Web Server (dropped)**
 
-![Task 6c](screenshots/task6c_T8_telnet_dropped.png)
+![Task 6c](task6c_T8_telnet_dropped.png)
 
 **6d. T9 – HTTP access to an external server**
 
-![Task 6d](screenshots/task6d_T9_http_external.png)
+![Task 6d](task6d_T9_http_external.png)
 
 **Before vs after the Inline Layer (Telnet)**
 
@@ -167,12 +165,10 @@ I installed the policy again and ran these tests:
 
 - **7a.** I changed the layer order (moving Service-Control above Network) and then restored the original order.
 
-![Task 7a](screenshots/task7a_layer_order_restored.png)
+![Task 7a](task7a_layer_order_restored.png)
 - **7b. T3 and T4 evidence:** I could not provide screenshots for this part.
 
-**Explanation:** When Service-Control is above Network, it evaluates traffic first. ICMP is not in the Allowed Services, so the Service-Control Cleanup Rule drops both T3 and T4 before Network even sees them. The user sees no difference because the traffic is blocked either way. Only the layer responsible for the drop changes.
-
-One more detail I want to keep straight: **DMZ-Policy is an Inline Layer attached to Network rule 3, not a third Ordered Layer.**
+**Explanation:** When Service-Control is above Network, it evaluates traffic first. ICMP is not in the Allowed Services, so the Service-Control Cleanup Rule drops both T3 and T4 before Network even sees them. The user sees no difference because the traffic is blocked either way. Only the layer responsible for the drop changes.One more detail I want to keep straight: **DMZ-Policy is an Inline Layer attached to Network rule 3, not a third Ordered Layer.**
 
 ---
 
@@ -238,11 +234,3 @@ This lab showed me how Check Point layers work together. The things I will remem
 3. Logs tell you which layer and which rule made the decision, so use them when troubleshooting.
 4. An Inline Layer is a layer inside a rule, not another Ordered Layer.
 5. Layers are mainly for organisation and control, not for speed.
-
----
-
-## Screenshots
-
-All 26 screenshots are in the [`screenshots/`](screenshots/) folder, named by task (for example `task4d_T1_ssh_accepted_after_fix.png`).
-
-Not available: Task 1c (system down), Task 5d, the DMZ-Policy rulebase page (system stuck), and Task 7b, T3 and T4.
